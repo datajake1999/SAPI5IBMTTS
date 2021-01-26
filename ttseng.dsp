@@ -52,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib advapi32.lib ole32.lib /nologo /subsystem:windows /dll /map /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\lib\i386"
+# ADD LINK32 kernel32.lib advapi32.lib ole32.lib ibmeci.lib /nologo /subsystem:windows /dll /map /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\lib\i386"
 # Begin Custom Build - Performing registration
 OutDir=.\Debug_x86
 TargetPath=.\Debug_x86\ttseng.dll
@@ -88,7 +88,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib advapi32.lib ole32.lib /nologo /subsystem:windows /dll /map /machine:I386 /libpath:"..\..\..\..\lib\i386"
+# ADD LINK32 kernel32.lib advapi32.lib ole32.lib ibmeci.lib /nologo /subsystem:windows /dll /map /machine:I386 /libpath:"..\..\..\..\lib\i386"
 # Begin Custom Build - Performing registration
 OutDir=.\Release_x86
 TargetPath=.\Release_x86\ttseng.dll

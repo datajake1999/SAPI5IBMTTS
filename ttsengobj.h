@@ -13,6 +13,7 @@
 #ifndef __TtsEng_h__
 #include "ttseng.h"
 #endif
+#include "eci.h"
 
 #ifndef SPDDKHLP_h
 #include <spddkhlp.h>
@@ -110,6 +111,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     //        we are just trying to keep it simple for the example.
     VOICEITEM*          m_pWordList;
     ULONG               m_ulNumWords;
+    ECIHand engine;
 
     //--- Working variables to walk the text fragment list during Speak()
     const SPVTEXTFRAG*  m_pCurrFrag;
