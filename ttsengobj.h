@@ -113,7 +113,6 @@ class ATL_NO_VTABLE CTTSEngObj :
     ULONG               m_ulNumWords;
     //ECI stuff
     ECIHand engine;
-    short *buffer;
 
     //--- Working variables to walk the text fragment list during Speak()
     const SPVTEXTFRAG*  m_pCurrFrag;

@@ -16,6 +16,24 @@
 
 //--- Local
 
+// Global pointer to OutputSite
+ISpTTSEngineSite *gpOutputSite;
+// ECI buffer
+short *buffer;
+// ECI callback
+static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
+{
+if (gpOutputSite->GetActions() & SPVES_ABORT)
+{
+return eciDataProcessed;
+}
+if (Msg == eciWaveformBuffer && lParam > 0)
+{
+gpOutputSite->Write(buffer, lParam*2, NULL);
+}
+return eciDataProcessed;
+}
+
 /*****************************************************************************
 * CTTSEngObj::FinalConstruct *
 *----------------------------*
@@ -35,6 +53,7 @@ HRESULT CTTSEngObj::FinalConstruct()
 
     //Initialize ECI
     engine = eciNew();
+    eciRegisterCallback(engine, callback, NULL);
     buffer = new short[4096];
     eciSetOutputBuffer(engine, 4096, buffer);
 
