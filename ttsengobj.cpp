@@ -33,6 +33,11 @@ HRESULT CTTSEngObj::FinalConstruct()
     m_pWordList  = NULL;
     m_ulNumWords = 0;
 
+    //Initialize ECI
+    engine = eciNew();
+    buffer = new short[4096];
+    eciSetOutputBuffer(engine, 4096, buffer);
+
     return hr;
 } /* CTTSEngObj::FinalConstruct */
 
@@ -57,6 +62,11 @@ void CTTSEngObj::FinalRelease()
     {
         ::CloseHandle( m_hVoiceData );
     }
+
+    //Shutdown ECI
+    buffer = NULL;
+    delete buffer;
+    engine = eciDelete(engine);
 
 } /* CTTSEngObj::FinalRelease */
 
