@@ -86,6 +86,7 @@ void CTTSEngObj::FinalRelease()
     buffer = NULL;
     delete buffer;
     engine = eciDelete(engine);
+    engine = NULL;
 
 } /* CTTSEngObj::FinalRelease */
 
