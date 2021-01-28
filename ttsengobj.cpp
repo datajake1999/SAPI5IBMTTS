@@ -327,6 +327,12 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
             Event.wParam               = Item.ulItemSrcLen;
             hr = pOutputSite->AddEvents( &Event, 1 );
 
+//Convert Unicode text to ANSI for ECI
+int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
+char *text2speak = new char[strsize];
+WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
+eciAddText(engine, text2speak);
+delete text2speak;
             //--- Queue the audio data
 eciSynthesize(engine);
 eciSynchronize(engine);
@@ -667,12 +673,6 @@ BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
         Item.ulItemSrcOffset = m_pCurrFrag->ulTextSrcOffset +
                                ( Item.pItem - m_pCurrFrag->pTextStart );
         ItemList.SetAt( ItemPos, Item );
-//Convert Unicode text to ANSI for ECI
-int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
-char *text2speak = new char[strsize];
-WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
-eciAddText(engine, text2speak);
-delete text2speak;
     }
 
     return fIsEOS;
