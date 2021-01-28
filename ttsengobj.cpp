@@ -21,7 +21,7 @@ ISpTTSEngineSite *gpOutputSite;
 // ECI buffer
 short *buffer;
 // ECI callback
-static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
+ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
 if (gpOutputSite->GetActions() & SPVES_ABORT)
 {
