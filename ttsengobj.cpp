@@ -318,12 +318,6 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
           //--- Speak some text ---------------------------------------
           case SPVA_Speak:
           {
-//Convert Unicode text to ANSI for ECI
-int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
-char *text2speak = new char[strsize];
-WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
-eciAddText(engine, text2speak);
-delete text2speak;
             //--- Queue the event
             CSpEvent Event;
             Event.eEventId             = SPEI_WORD_BOUNDARY;
@@ -335,6 +329,7 @@ delete text2speak;
 
             //--- Queue the audio data
 eciSynthesize(engine);
+eciSynchronize(engine);
 
             //--- Update the audio offset
             m_ullAudioOff += 2048;
@@ -672,6 +667,12 @@ BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
         Item.ulItemSrcOffset = m_pCurrFrag->ulTextSrcOffset +
                                ( Item.pItem - m_pCurrFrag->pTextStart );
         ItemList.SetAt( ItemPos, Item );
+//Convert Unicode text to ANSI for ECI
+int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
+char *text2speak = new char[strsize];
+WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
+eciAddText(engine, text2speak);
+delete text2speak;
     }
 
     return fIsEOS;
