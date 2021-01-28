@@ -337,7 +337,7 @@ delete text2speak;
 eciSynthesize(engine);
 
             //--- Update the audio offset
-            m_ullAudioOff += 1024;
+            m_ullAudioOff += 2048;
           }
           break;
 
