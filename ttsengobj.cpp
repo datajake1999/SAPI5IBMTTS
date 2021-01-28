@@ -54,8 +54,8 @@ HRESULT CTTSEngObj::FinalConstruct()
     //Initialize ECI
     engine = eciNew();
     eciRegisterCallback(engine, callback, NULL);
-    buffer = new short[4096];
-    eciSetOutputBuffer(engine, 4096, buffer);
+    buffer = new short[1024];
+    eciSetOutputBuffer(engine, 1024, buffer);
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
@@ -161,58 +161,6 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
     SPDBG_FUNC( "CTTSEngObj::SetObjectToken" );
     HRESULT hr = SpGenericSetObjectToken(pToken, m_cpToken);
-
-    //--- Map the voice data so it will be shared among all instances
-    //  Note: This is a good example of how to memory map and share
-    //        your voice data across instances.
-    if( SUCCEEDED( hr ) )
-    {
-        hr = MapFile( L"VoiceData", &m_hVoiceData, &m_pVoiceData );
-    }
-
-    //--- Setup word list
-    //  Note: This is specific to our example, you probably
-    //        don't care much about this logic.
-    if( SUCCEEDED( hr ) )
-    {
-        delete m_pWordList;
-
-        //--- Check version
-        UNALIGNED DWORD* pdwPtr = (UNALIGNED DWORD*)m_pVoiceData;
-        if( *pdwPtr++ != 1 )
-        {
-            //--- Bad voice file version
-            hr = E_INVALIDARG;
-            SPDBG_ASSERT(0);
-        }
-    
-        //--- Get number of words
-        if( SUCCEEDED( hr ) )
-        {
-            m_ulNumWords = *pdwPtr++;
-        }
-
-        //--- Build word list
-        m_pWordList = new VOICEITEM[m_ulNumWords];
-        if( !m_pWordList )
-        {
-            hr = E_OUTOFMEMORY;
-        }
-        else
-        {
-            for( ULONG i = 0; i < m_ulNumWords; ++i )
-            {
-                ULONG ulTextByteLen = *pdwPtr++;
-                m_pWordList[i].pText = (UNALIGNED WCHAR*)pdwPtr;
-                m_pWordList[i].ulTextLen = (ulTextByteLen / sizeof(WCHAR)) - 1;
-                pdwPtr = (UNALIGNED DWORD*)(((BYTE*)pdwPtr) + ulTextByteLen);
-                m_pWordList[i].ulNumAudioBytes = *pdwPtr++;
-                m_pWordList[i].pAudio = (BYTE*)pdwPtr;
-                pdwPtr = (UNALIGNED DWORD*)(((BYTE*)pdwPtr) + m_pWordList[i].ulNumAudioBytes);
-            }
-        }
-    }
-
     return hr;
 } /* CTTSEngObj::SetObjectToken */
 
@@ -355,7 +303,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutputSite )
 {
     HRESULT hr = S_OK;
-    ULONG WordIndex;
+    gpOutputSite = pOutputSite;
 
     //--- Lookup words in our voice
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
@@ -369,69 +317,26 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
           //--- Speak some text ---------------------------------------
           case SPVA_Speak:
           {
-            //--- We don't say anything for punctuation or control characters
-            //    in this sample. 
-            if( iswalpha( Item.pItem[0] ) || iswdigit( Item.pItem[0] ) )
-            {
-                //--- Lookup the word, if we can't find it just use the first one
-                for( WordIndex = 0; WordIndex < m_ulNumWords; ++WordIndex )
-                {
-                    if( ( m_pWordList[WordIndex].ulTextLen == Item.ulItemLen ) &&
-                        ( !wcsnicmp( m_pWordList[WordIndex].pText, Item.pItem, Item.ulItemLen )) )
-                    {
-                        break;
-                    }
-                }
-                if( WordIndex == m_ulNumWords )
-                {
-                    WordIndex = 0;
-                }
+//Convert Unicode text to ANSI for ECI
+int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
+char *text2speak = new char[strsize];
+WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
+eciAddText(engine, text2speak);
+delete text2speak;
+            //--- Queue the event
+            CSpEvent Event;
+            Event.eEventId             = SPEI_WORD_BOUNDARY;
+            Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
+            Event.ullAudioStreamOffset = m_ullAudioOff;
+            Event.lParam               = Item.ulItemSrcOffset;
+            Event.wParam               = Item.ulItemSrcLen;
+            hr = pOutputSite->AddEvents( &Event, 1 );
 
-                //--- Queue the event
-                CSpEvent Event;
-                Event.eEventId             = SPEI_WORD_BOUNDARY;
-                Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
-                Event.ullAudioStreamOffset = m_ullAudioOff;
-                Event.lParam               = Item.ulItemSrcOffset;
-                Event.wParam               = Item.ulItemSrcLen;
-                hr = pOutputSite->AddEvents( &Event, 1 );
-
-                //--- Queue the audio data
-                hr = pOutputSite->Write( m_pWordList[WordIndex].pAudio,
-                                         m_pWordList[WordIndex].ulNumAudioBytes,
-                                         NULL );
-
-                //--- Update the audio offset
-                m_ullAudioOff += m_pWordList[WordIndex].ulNumAudioBytes;
-            }
-          }
-          break;
-
-          //--- Output some silence for a pause -----------------------
-          case SPVA_Silence:
-          {
-            BYTE Buff[1000];
-            memset( Buff, 0, 1000 );
-            ULONG NumSilenceBytes = Item.pXmlState->SilenceMSecs * 22;
-
-            //--- Queue the audio data in chunks so that we can get
-            //    interrupted if necessary.
-            while( !(pOutputSite->GetActions() & SPVES_ABORT) )
-            {
-                if( NumSilenceBytes > 1000 )
-                {
-                    hr = pOutputSite->Write( Buff, 1000, NULL );
-                    NumSilenceBytes -= 1000;
-                }
-                else
-                {
-                    hr = pOutputSite->Write( Buff, NumSilenceBytes, NULL );
-                    break;
-                }
-            }
+            //--- Queue the audio data
+eciSynthesize(engine);
 
             //--- Update the audio offset
-            m_ullAudioOff += NumSilenceBytes;
+            m_ullAudioOff += 1024;
           }
           break;
 
