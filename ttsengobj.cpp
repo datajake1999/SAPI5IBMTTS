@@ -20,6 +20,12 @@
 ISpTTSEngineSite *gpOutputSite;
 // ECI buffer
 short *buffer;
+//convert SAPI rate to ECI rate
+static int SAPI2ECIRate(int rate)
+{
+int DefaultRate = 60;
+return DefaultRate + (rate * 10);
+}
 // ECI callback
 ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
@@ -250,6 +256,14 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                     hr = pOutputSite->CompleteSkip( 0 );
                 }
             }
+
+//set ECI voice parameters
+signed long rate;
+unsigned short volume;
+pOutputSite->GetRate(&rate);
+pOutputSite->GetVolume(&volume);
+eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
+eciSetVoiceParam(engine, 0, eciVolume, volume);
 
             //--- Build the text item list
             if( SUCCEEDED( hr ) && (hr = GetNextSentence( ItemList )) != S_OK )
