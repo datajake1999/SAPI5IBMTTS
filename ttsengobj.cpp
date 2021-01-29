@@ -54,8 +54,8 @@ HRESULT CTTSEngObj::FinalConstruct()
     //Initialize ECI
     engine = eciNew();
     eciRegisterCallback(engine, callback, NULL);
-    buffer = new short[1024];
-    eciSetOutputBuffer(engine, 1024, buffer);
+    buffer = new short[4096];
+    eciSetOutputBuffer(engine, 4096, buffer);
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
@@ -328,17 +328,12 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
             hr = pOutputSite->AddEvents( &Event, 1 );
 
 //Convert Unicode text to ANSI for ECI
-int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, NULL, 0, NULL, NULL);
-char *text2speak = new char[strsize];
-WideCharToMultiByte(CP_ACP, 0, Item.pItem, -1, text2speak, strsize, NULL, NULL);
+int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, Item.ulItemLen, NULL, 0, NULL, NULL);
+char *text2speak = new char[strsize+1];
+text2speak[strsize] = 0;
+WideCharToMultiByte(CP_ACP, 0, Item.pItem, Item.ulItemLen, text2speak, strsize, NULL, NULL);
 eciAddText(engine, text2speak);
 delete text2speak;
-            //--- Queue the audio data
-eciSynthesize(engine);
-eciSynchronize(engine);
-
-            //--- Update the audio offset
-            m_ullAudioOff += 2048;
           }
           break;
 
@@ -377,6 +372,12 @@ eciSynchronize(engine);
         }
     }
 
+            //--- Queue the audio data
+eciSynthesize(engine);
+eciSynchronize(engine);
+
+            //--- Update the audio offset
+            m_ullAudioOff += 8192;
     return hr;
 } /* CTTSEngObj::OutputSentence */
 
