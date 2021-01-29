@@ -56,6 +56,7 @@ HRESULT CTTSEngObj::FinalConstruct()
     eciRegisterCallback(engine, callback, NULL);
     buffer = new short[4096];
     eciSetOutputBuffer(engine, 4096, buffer);
+eciSetParam(engine, eciInputType, 1);
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
