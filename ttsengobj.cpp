@@ -31,7 +31,7 @@ ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, lon
 {
 if (gpOutputSite->GetActions() & SPVES_ABORT)
 {
-return eciDataProcessed;
+return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
