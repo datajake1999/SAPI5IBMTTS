@@ -51,12 +51,6 @@ HRESULT CTTSEngObj::FinalConstruct()
     SPDBG_FUNC( "CTTSEngObj::FinalConstruct" );
     HRESULT hr = S_OK;
 
-    //--- Init vars
-    m_hVoiceData = NULL;
-    m_pVoiceData = NULL;
-    m_pWordList  = NULL;
-    m_ulNumWords = 0;
-
     //Initialize ECI
     engine = eciNew();
     eciRegisterCallback(engine, callback, NULL);
@@ -77,18 +71,6 @@ void CTTSEngObj::FinalRelease()
 {
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
-    delete m_pWordList;
-
-    if( m_pVoiceData )
-    {
-        ::UnmapViewOfFile( (void*)m_pVoiceData );
-    }
-
-    if( m_hVoiceData )
-    {
-        ::CloseHandle( m_hVoiceData );
-    }
-
     //Shutdown ECI
     buffer = NULL;
     delete buffer;
@@ -96,62 +78,6 @@ void CTTSEngObj::FinalRelease()
     engine = NULL;
 
 } /* CTTSEngObj::FinalRelease */
-
-/*****************************************************************************
-* CTTSEngObj::MapFile *
-*---------------------*
-*   Description:
-*       Helper function used by SetObjectToken to map file.  This function
-*   assumes that m_cpToken has been initialized.
-*****************************************************************************/
-HRESULT CTTSEngObj::MapFile( const WCHAR * pszTokenVal,  // Value that contains file path
-                            HANDLE * phMapping,          // Pointer to file mapping handle
-                            void ** ppvData )            // Pointer to the data
-{
-    USES_CONVERSION;
-    HRESULT hr = S_OK;
-    CSpDynamicString dstrFilePath;
-    hr = m_cpToken->GetStringValue( pszTokenVal, &dstrFilePath );
-    if ( SUCCEEDED( hr ) )
-    {
-        bool fWorked = false;
-        *phMapping = NULL;
-        *ppvData = NULL;
-        HANDLE hFile;
-#ifdef _WIN32_WCE
-        hFile = CreateFileForMapping( dstrFilePath, GENERIC_READ,
-                                      FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                                      FILE_ATTRIBUTE_NORMAL, NULL );
-#else
-        hFile = CreateFile( W2T(dstrFilePath), GENERIC_READ,
-                            FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                            FILE_ATTRIBUTE_NORMAL, NULL );
-#endif
-        if (hFile != INVALID_HANDLE_VALUE)
-        {
-            *phMapping = ::CreateFileMapping( hFile, NULL, PAGE_READONLY, 0, 0, NULL );
-            if (*phMapping)
-            {
-                *ppvData = ::MapViewOfFile( *phMapping, FILE_MAP_READ, 0, 0, 0 );
-                if (*ppvData)
-                {
-                    fWorked = true;
-                }
-            }
-            ::CloseHandle( hFile );
-        }
-        if (!fWorked)
-        {
-            hr = HRESULT_FROM_WIN32(::GetLastError());
-            if (*phMapping)
-            {
-                ::CloseHandle(*phMapping);
-                *phMapping = NULL;
-            }
-        }
-    }
-    return hr;
-} /* CTTSEngObj::MapFile */
 
 //
 //=== ISpObjectWithToken Implementation ======================================

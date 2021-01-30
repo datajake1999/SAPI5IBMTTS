@@ -96,7 +96,6 @@ class ATL_NO_VTABLE CTTSEngObj :
 
   private:
     /*--- Non interface methods ---*/
-    HRESULT MapFile(const WCHAR * pszTokenValName, HANDLE * phMapping, void ** ppvData );
     HRESULT GetNextSentence( CItemList& ItemList );
     BOOL    AddNextSentItem( CItemList& ItemList );
     HRESULT OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutputSite );
@@ -104,13 +103,6 @@ class ATL_NO_VTABLE CTTSEngObj :
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
-    HANDLE                  m_hVoiceData;
-    void*                   m_pVoiceData;
-    //--- Voice (word/audio data) list
-    //  Note: You will probably have something more sophisticated here
-    //        we are just trying to keep it simple for the example.
-    VOICEITEM*          m_pWordList;
-    ULONG               m_ulNumWords;
     //ECI stuff
     ECIHand engine;
 static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData);
