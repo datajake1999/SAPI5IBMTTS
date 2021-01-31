@@ -29,13 +29,16 @@ return DefaultRate + (rate * 10);
 // ECI callback
 ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
-if (gpOutputSite->GetActions() & SPVES_ABORT)
+CTTSEngObj *SAPI = (CTTSEngObj*)pData;
+if ((gpOutputSite->GetActions() & SPVES_ABORT) || !SAPI)
 {
 return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
 gpOutputSite->Write(buffer, lParam*2, NULL);
+            //--- Update the audio offset
+            SAPI->m_ullAudioOff += lParam*2;
 }
 return eciDataProcessed;
 }
@@ -53,7 +56,7 @@ HRESULT CTTSEngObj::FinalConstruct()
 
     //Initialize ECI
     engine = eciNew();
-    eciRegisterCallback(engine, callback, NULL);
+    eciRegisterCallback(engine, callback, this);
     buffer = new short[4096];
     eciSetOutputBuffer(engine, 4096, buffer);
 eciSetParam(engine, eciInputType, 1);
@@ -317,8 +320,6 @@ delete text2speak;
 eciSynthesize(engine);
 eciSynchronize(engine);
 
-            //--- Update the audio offset
-            m_ullAudioOff += 8192;
     return hr;
 } /* CTTSEngObj::OutputSentence */
 
