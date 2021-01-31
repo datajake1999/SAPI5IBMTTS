@@ -161,6 +161,14 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_pEndChar    = m_pNextChar + m_pCurrFrag->ulTextLen;
         m_ullAudioOff = 0;
 
+//set ECI voice parameters
+signed long rate;
+unsigned short volume;
+pOutputSite->GetRate(&rate);
+pOutputSite->GetVolume(&volume);
+eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
+eciSetVoiceParam(engine, 0, eciVolume, volume);
+
         //--- Parse
         //    We've supplied a simple word/sentence breaker just to show one
         //    way of walking the fragment list. It obviously doesn't deal with
@@ -182,14 +190,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                     hr = pOutputSite->CompleteSkip( 0 );
                 }
             }
-
-//set ECI voice parameters
-signed long rate;
-unsigned short volume;
-pOutputSite->GetRate(&rate);
-pOutputSite->GetVolume(&volume);
-eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
-eciSetVoiceParam(engine, 0, eciVolume, volume);
 
             //--- Build the text item list
             if( SUCCEEDED( hr ) && (hr = GetNextSentence( ItemList )) != S_OK )
