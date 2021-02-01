@@ -55,7 +55,6 @@ HRESULT CTTSEngObj::FinalConstruct()
     //Initialize ECI
     engine = eciNew();
     eciRegisterCallback(engine, callback, this);
-    buffer = new short[4096];
     eciSetOutputBuffer(engine, 4096, buffer);
 eciSetParam(engine, eciInputType, 1);
 
@@ -73,8 +72,6 @@ void CTTSEngObj::FinalRelease()
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
     //Shutdown ECI
-    buffer = NULL;
-    delete buffer;
     engine = eciDelete(engine);
     engine = NULL;
 
