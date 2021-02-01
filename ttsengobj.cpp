@@ -18,8 +18,6 @@
 
 // Global pointer to OutputSite
 ISpTTSEngineSite *gpOutputSite;
-// ECI buffer
-short *buffer;
 //convert SAPI rate to ECI rate
 static int SAPI2ECIRate(int rate)
 {
@@ -36,7 +34,7 @@ return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
-gpOutputSite->Write(buffer, lParam*2, NULL);
+gpOutputSite->Write(SAPI->buffer, lParam*2, NULL);
             //--- Update the audio offset
             SAPI->m_ullAudioOff += lParam*2;
 }

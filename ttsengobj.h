@@ -105,6 +105,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     CComPtr<ISpObjectToken> m_cpToken;
     //ECI stuff
     ECIHand engine;
+short *buffer;
 static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData);
 
     //--- Working variables to walk the text fragment list during Speak()
