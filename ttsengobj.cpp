@@ -268,8 +268,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 
 //Convert Unicode text to ANSI for ECI
 int strsize = WideCharToMultiByte(CP_ACP, 0, Item.pItem, Item.ulItemLen, NULL, 0, NULL, NULL);
-if (text2speak) delete text2speak;
-text2speak = new char[strsize+1];
+char *text2speak = new char[strsize+1];
 text2speak[strsize] = 0;
 WideCharToMultiByte(CP_ACP, 0, Item.pItem, Item.ulItemLen, text2speak, strsize, NULL, NULL);
 eciAddText(engine, text2speak);
