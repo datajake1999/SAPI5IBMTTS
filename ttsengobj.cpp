@@ -199,8 +199,6 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
                     text2speak[strsize] = 0;
                     WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
                     if (text2speak) eciAddText(engine, text2speak);
-        eciSynthesize(engine);
-        eciSynchronize(engine);
                     break;
                 }
 
@@ -226,6 +224,10 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
             }
             pTextFragList = pTextFragList->pNext;
         }
+
+//Synthesize text
+        eciSynthesize(engine);
+        eciSynchronize(engine);
 
         //--- S_FALSE just says that we hit the end, return okay
         if( hr == S_FALSE )
