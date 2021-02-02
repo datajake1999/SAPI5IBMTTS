@@ -23,23 +23,25 @@ int DefaultRate = 60;
 return DefaultRate + (rate * 10);
 }
 
+    // Global pointer to OutputSite
+    ISpTTSEngineSite *gpOutputSite;
+
+//Handle to ECI
+ECIHand engine;
+//Input buffer
+char *text2speak;
+//Output buffer
+short buffer[4096];
 // ECI callback
-ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
+ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
-CTTSEngObj *SAPI = (CTTSEngObj*)pData;
-if (!SAPI)
-{
-return eciDataAbort;
-}
-if (SAPI->gpOutputSite->GetActions() & SPVES_ABORT)
+if (gpOutputSite->GetActions() & SPVES_ABORT)
 {
 return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
-SAPI->gpOutputSite->Write(SAPI->buffer, lParam*2, NULL);
-            //--- Update the audio offset
-            SAPI->m_ullAudioOff += lParam*2;
+gpOutputSite->Write(buffer, lParam*2, NULL);
 }
 return eciDataProcessed;
 }
@@ -57,7 +59,7 @@ HRESULT CTTSEngObj::FinalConstruct()
 
     //Initialize ECI
     engine = eciNew();
-    eciRegisterCallback(engine, callback, this);
+    eciRegisterCallback(engine, callback, NULL);
     eciSetOutputBuffer(engine, 4096, buffer);
 eciSetParam(engine, eciInputType, 1);
 

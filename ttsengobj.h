@@ -103,13 +103,6 @@ class ATL_NO_VTABLE CTTSEngObj :
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
-    // Global pointer to OutputSite
-    ISpTTSEngineSite *gpOutputSite;
-    //ECI stuff
-    ECIHand engine;
-char *text2speak;
-short buffer[4096];
-static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData);
 
     //--- Working variables to walk the text fragment list during Speak()
     const SPVTEXTFRAG*  m_pCurrFrag;
