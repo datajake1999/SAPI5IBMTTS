@@ -16,25 +16,28 @@
 
 //--- Local
 
-// Global pointer to OutputSite
-ISpTTSEngineSite *gpOutputSite;
 //convert SAPI rate to ECI rate
 static int SAPI2ECIRate(int rate)
 {
 int DefaultRate = 60;
 return DefaultRate + (rate * 10);
 }
+
 // ECI callback
 ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
 CTTSEngObj *SAPI = (CTTSEngObj*)pData;
-if ((gpOutputSite->GetActions() & SPVES_ABORT) || !SAPI)
+if (!SAPI)
+{
+return eciDataAbort;
+}
+if (SAPI->gpOutputSite->GetActions() & SPVES_ABORT)
 {
 return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
-gpOutputSite->Write(SAPI->buffer, lParam*2, NULL);
+SAPI->gpOutputSite->Write(SAPI->buffer, lParam*2, NULL);
             //--- Update the audio offset
             SAPI->m_ullAudioOff += lParam*2;
 }

@@ -103,6 +103,8 @@ class ATL_NO_VTABLE CTTSEngObj :
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
+    // Global pointer to OutputSite
+    ISpTTSEngineSite *gpOutputSite;
     //ECI stuff
     ECIHand engine;
 short buffer[4096];
