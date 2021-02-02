@@ -35,25 +35,6 @@
 
 //=== Class, Struct and Union Definitions ==========================
 
-/*** CSentItem
-*   This object is a helper class
-*/
-class CSentItem
-{
-  public:
-    CSentItem() { memset( this, 0, sizeof(*this) ); }
-    CSentItem( CSentItem& Other ) { memcpy( this, &Other, sizeof( Other ) ); }
-
-  /*--- Data members ---*/
-    const SPVSTATE* pXmlState;
-    LPCWSTR         pItem;
-    ULONG           ulItemLen;
-    ULONG           ulItemSrcOffset;        // Original source character position
-    ULONG           ulItemSrcLen;           // Length of original source item in characters
-};
-
-typedef CSPList<CSentItem,CSentItem&> CItemList;
-
 /*** CTTSEngObj COM object ********************************
 */
 class ATL_NO_VTABLE CTTSEngObj : 
@@ -94,21 +75,10 @@ class ATL_NO_VTABLE CTTSEngObj :
                                 GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx );
 
 
-  private:
-    /*--- Non interface methods ---*/
-    HRESULT GetNextSentence( CItemList& ItemList );
-    BOOL    AddNextSentItem( CItemList& ItemList );
-    HRESULT OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutputSite );
-
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
 
-    //--- Working variables to walk the text fragment list during Speak()
-    const SPVTEXTFRAG*  m_pCurrFrag;
-    const WCHAR*        m_pNextChar;
-    const WCHAR*        m_pEndChar;
-    ULONGLONG           m_ullAudioOff;
 };
 
 #endif //--- This must be the last line in the file
