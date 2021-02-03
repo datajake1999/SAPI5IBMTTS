@@ -172,7 +172,7 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
                 eciStop(engine);
-                break;
+                return hr;
             }
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
