@@ -23,19 +23,23 @@ int DefaultRate = 60;
 return DefaultRate + (rate * 10);
 }
 
-    // Global pointer to OutputSite
-    ISpTTSEngineSite *gpOutputSite;
+// Global pointer to OutputSite
+static ISpTTSEngineSite *gpOutputSite;
 
 //Handle to ECI
-ECIHand engine;
+static ECIHand engine;
+
 //check if we are speaking or not
-bool speaking;
+static bool speaking;
+
 //Input buffer
-char *text2speak;
+static char *text2speak;
+
 //Output buffer
-short buffer[4096];
+static short buffer[4096];
+
 // ECI callback
-ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
+static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
 if (!speaking || (gpOutputSite->GetActions() & SPVES_ABORT))
 {
@@ -47,8 +51,9 @@ gpOutputSite->Write(buffer, lParam*2, NULL);
 }
 return eciDataProcessed;
 }
+
 // ECI synthesis loop
-void SynthLoop()
+static void SynthLoop()
 {
 int SpeakState = eciSpeaking(engine);
 while (speaking == true)
