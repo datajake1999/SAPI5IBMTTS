@@ -202,6 +202,16 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
                     break;
                 }
 
+                case SPVA_Silence:
+                {
+                    //Insert a pause
+                    if (text2speak) free(text2speak);
+                    text2speak = (char *)malloc(32);
+                    sprintf(text2speak, "`p%d", pTextFragList->State.SilenceMSecs);
+                    if (text2speak) eciAddText(engine, text2speak);
+                    break;
+                }
+
           //--- Fire a bookmark event ---------------------------------
           case SPVA_Bookmark:
           {

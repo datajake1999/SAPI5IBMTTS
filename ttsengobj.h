@@ -13,6 +13,7 @@
 #ifndef __TtsEng_h__
 #include "ttseng.h"
 #endif
+#include <stdio.h>
 #include "eci.h"
 
 #ifndef SPDDKHLP_h
