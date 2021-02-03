@@ -41,7 +41,11 @@ static short buffer[1024];
 // ECI callback
 static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
-if (!speaking || (gpOutputSite->GetActions() & SPVES_ABORT))
+if (!speaking)
+{
+return eciDataNotProcessed;
+}
+if (gpOutputSite->GetActions() & SPVES_ABORT)
 {
 return eciDataAbort;
 }
