@@ -28,6 +28,8 @@ return DefaultRate + (rate * 10);
 
 //Handle to ECI
 ECIHand engine;
+//check if we are speaking or not
+bool speaking;
 //Input buffer
 char *text2speak;
 //Output buffer
@@ -35,7 +37,7 @@ short buffer[4096];
 // ECI callback
 ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
-if (gpOutputSite->GetActions() & SPVES_ABORT)
+if (!speaking || (gpOutputSite->GetActions() & SPVES_ABORT))
 {
 return eciDataAbort;
 }
@@ -44,6 +46,15 @@ if (Msg == eciWaveformBuffer && lParam > 0)
 gpOutputSite->Write(buffer, lParam*2, NULL);
 }
 return eciDataProcessed;
+}
+// ECI synthesis loop
+void SynthLoop()
+{
+int SpeakState = eciSpeaking(engine);
+while (speaking == true)
+{
+if (eciSpeaking(engine) != SpeakState) speaking = false;
+}
 }
 
 /*****************************************************************************
@@ -62,6 +73,7 @@ HRESULT CTTSEngObj::FinalConstruct()
     eciRegisterCallback(engine, callback, NULL);
     eciSetOutputBuffer(engine, 4096, buffer);
 eciSetParam(engine, eciInputType, 1);
+speaking = false;
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
@@ -237,7 +249,9 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
 
 //Synthesize text
         eciSynthesize(engine);
-        eciSynchronize(engine);
+//wait for synthesis to complete
+        speaking = true;
+        SynthLoop();
 
         //--- S_FALSE just says that we hit the end, return okay
         if( hr == S_FALSE )
