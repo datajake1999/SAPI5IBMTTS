@@ -253,9 +253,8 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
         }
 
 //Synthesize text
-        eciSynthesize(engine);
+        if (eciSynthesize(engine)) speaking = true;
 //wait for synthesis to complete
-        speaking = true;
         SynthLoop();
 
         //--- S_FALSE just says that we hit the end, return okay
