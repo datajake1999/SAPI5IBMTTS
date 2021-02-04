@@ -146,12 +146,89 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         eciSetParam(engine, eciInputType, 1);
         speaking = false;
 
-        //Set variable for default voice
-        m_voice = 1;
-
-        //Load voice from the token if it is set
+        //Load settings from the token
+        m_cpToken->GetDWORD( L"Language", &m_lang);
         m_cpToken->GetDWORD( L"Voice", &m_voice);
-        //Check if we are in a valid range
+
+        //Set ECI language
+        //Their is Probably a much more efficient way of doing this
+        switch(m_lang)
+        {
+            default:
+            eciSetParam(engine, eciLanguageDialect, NODEFINEDCODESET);
+            break;
+            case 1:
+            eciSetParam(engine, eciLanguageDialect, eciGeneralAmericanEnglish);
+            break;
+            case 2:
+            eciSetParam(engine, eciLanguageDialect, eciBritishEnglish);
+            break;
+            case 3:
+            eciSetParam(engine, eciLanguageDialect, eciCastilianSpanish);
+            break;
+            case 4:
+            eciSetParam(engine, eciLanguageDialect, eciMexicanSpanish);
+            break;
+            case 5:
+            eciSetParam(engine, eciLanguageDialect, eciStandardFrench);
+            break;
+            case 6:
+            eciSetParam(engine, eciLanguageDialect, eciCanadianFrench);
+            break;
+            case 7:
+            eciSetParam(engine, eciLanguageDialect, eciStandardGerman);
+            break;
+            case 8:
+            eciSetParam(engine, eciLanguageDialect, eciStandardItalian);
+            break;
+            case 9:
+            eciSetParam(engine, eciLanguageDialect, eciMandarinChinese);
+            break;
+            case 10:
+            eciSetParam(engine, eciLanguageDialect, eciMandarinChineseGB);
+            break;
+            case 11:
+            eciSetParam(engine, eciLanguageDialect, eciMandarinChinesePinYin);
+            break;
+            case 12:
+            eciSetParam(engine, eciLanguageDialect, eciMandarinChineseUCS);
+            break;
+            case 13:
+            eciSetParam(engine, eciLanguageDialect, eciTaiwaneseMandarin);
+            break;
+            case 14:
+            eciSetParam(engine, eciLanguageDialect, eciTaiwaneseMandarinBig5);
+            break;
+            case 15:
+            eciSetParam(engine, eciLanguageDialect, eciTaiwaneseMandarinZhuYin);
+            break;
+            case 16:
+            eciSetParam(engine, eciLanguageDialect, eciTaiwaneseMandarinPinYin);
+            break;
+            case 17:
+            eciSetParam(engine, eciLanguageDialect, eciTaiwaneseMandarinUCS);
+            break;
+            case 18:
+            eciSetParam(engine, eciLanguageDialect, eciBrazilianPortuguese);
+            break;
+            case 19:
+            eciSetParam(engine, eciLanguageDialect, eciStandardJapanese);
+            break;
+            case 20:
+            eciSetParam(engine, eciLanguageDialect, eciStandardJapaneseSJIS);
+            break;
+            case 21:
+            eciSetParam(engine, eciLanguageDialect, eciStandardJapaneseUCS);
+            break;
+            case 22:
+            eciSetParam(engine, eciLanguageDialect, eciStandardFinnish);
+            break;
+            case 23:
+            eciSetParam(engine, eciLanguageDialect, eciStandardKorean);
+            break;
+        }
+
+        //Check if we are in a valid range for m_voice
         if (m_voice > 8)
         {
             m_voice = 8;
@@ -160,6 +237,7 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         {
             m_voice = 1;
         }
+
         //Copy voice parameters to active voice
         eciCopyVoice(engine, m_voice, 0);
 

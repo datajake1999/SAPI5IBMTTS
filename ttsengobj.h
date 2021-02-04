@@ -81,6 +81,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     CComPtr<ISpObjectToken> m_cpToken;
 
     //ECI settings
+    unsigned long m_lang;
     unsigned long m_voice;
 
 };
