@@ -2,16 +2,16 @@ HKCR
 {
 	TtsEng.SampleTTSEngine.1 = s 'SampleTTSEngine Class'
 	{
-		CLSID = s '{A832755E-9C2A-40B4-89B2-3A92EE705852}'
+		CLSID = s '{301EDFC4-D65B-4823-A598-450EE4656837}'
 	}
 	TtsEng.SampleTTSEngine = s 'SampleTTSEngine Class'
 	{
-		CLSID = s '{A832755E-9C2A-40B4-89B2-3A92EE705852}'
+		CLSID = s '{301EDFC4-D65B-4823-A598-450EE4656837}'
 		CurVer = s 'TtsEng.SampleTTSEngine.1'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {A832755E-9C2A-40B4-89B2-3A92EE705852} = s 'SampleTTSEngine Class'
+		ForceRemove {301EDFC4-D65B-4823-A598-450EE4656837} = s 'SampleTTSEngine Class'
 		{
 			ProgID = s 'TtsEng.SampleTTSEngine.1'
 			VersionIndependentProgID = s 'TtsEng.SampleTTSEngine'
@@ -19,7 +19,7 @@ HKCR
 			{
 				val ThreadingModel = s 'Both'
 			}
-			'TypeLib' = s '{7192AA2F-F759-43E9-91E7-226371EF6B2F}'
+			'TypeLib' = s '{AA22D99E-1E88-4960-BB07-CA277F611372}'
 		}
 	}
 }

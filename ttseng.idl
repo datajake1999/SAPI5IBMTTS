@@ -28,7 +28,7 @@ typedef struct VOICEITEM
 
 //=== CoClass definitions =====================================================
 [
-	uuid(7192AA2F-F759-43e9-91E7-226371EF6B2F),
+	uuid(AA22D99E-1E88-4960-BB07-CA277F611372),
 	version(1.0),
 	helpstring("Sample TTS Engine 1.0 Type Library")
 ]
@@ -38,7 +38,7 @@ library SAMPLETTSENGLib
 	importlib("stdole2.tlb");
 
 	[
-		uuid(A832755E-9C2A-40b4-89B2-3A92EE705852),
+		uuid(301EDFC4-D65B-4823-A598-450EE4656837),
 		helpstring("SampleTTSEngine Class")
 	]
 	coclass SampleTTSEngine
