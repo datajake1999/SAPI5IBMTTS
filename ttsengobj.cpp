@@ -239,6 +239,9 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
             switch(pTextFragList->State.eAction)
             {
 
+                case SPVA_SpellOut:
+                {
+                }
                 case SPVA_Speak:
                 {
                     //Convert Unicode text to ANSI for ECI
