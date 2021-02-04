@@ -101,13 +101,6 @@ HRESULT CTTSEngObj::FinalConstruct()
     SPDBG_FUNC( "CTTSEngObj::FinalConstruct" );
     HRESULT hr = S_OK;
 
-    //Initialize ECI
-    engine = eciNew();
-    eciRegisterCallback(engine, callback, NULL);
-    eciSetOutputBuffer(engine, 4096, buffer);
-eciSetParam(engine, eciInputType, 1);
-speaking = false;
-
     return hr;
 } /* CTTSEngObj::FinalConstruct */
 
@@ -143,6 +136,35 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
     SPDBG_FUNC( "CTTSEngObj::SetObjectToken" );
     HRESULT hr = SpGenericSetObjectToken(pToken, m_cpToken);
+
+    if( SUCCEEDED( hr ) )
+    {
+        //Initialize ECI
+        engine = eciNew();
+        eciRegisterCallback(engine, callback, NULL);
+        eciSetOutputBuffer(engine, 4096, buffer);
+        eciSetParam(engine, eciInputType, 1);
+        speaking = false;
+
+        //Set variable for default voice
+        m_voice = 1;
+
+        //Load voice from the token if it is set
+        m_cpToken->GetDWORD( L"Voice", &m_voice);
+        //Check if we are in a valid range
+        if (m_voice > 8)
+        {
+            m_voice = 8;
+        }
+        else if (m_voice < 1)
+        {
+            m_voice = 1;
+        }
+        //Copy voice parameters to active voice
+        eciCopyVoice(engine, m_voice, 0);
+
+    }
+
     return hr;
 } /* CTTSEngObj::SetObjectToken */
 
@@ -211,7 +233,7 @@ signed long DefaultECIPitch;
 unsigned short volume;
 pOutputSite->GetRate(&rate);
 pitch = pTextFragList->State.PitchAdj.MiddleAdj;
-DefaultECIPitch = eciGetVoiceParam(engine, 1, eciPitchBaseline);
+DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
 pOutputSite->GetVolume(&volume);
 eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
 eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
