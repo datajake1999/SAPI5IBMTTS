@@ -1,0 +1,14 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\SampleTTSVoice]
+@="Sample TTS Voice"
+"409"="Sample TTS Voice"
+"CLSID"="{A832755E-9C2A-40B4-89B2-3A92EE705852}"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\SampleTTSVoice\Attributes]
+"Gender"="Male"
+"Language"="409;9"
+"Age"="Adult"
+"Vendor"="Microsoft"
+"Name"="SampleTTSVoice"
+
