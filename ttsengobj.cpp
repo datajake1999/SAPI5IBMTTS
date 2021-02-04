@@ -36,7 +36,7 @@ static bool speaking;
 static char *text2speak;
 
 //Output buffer
-static short buffer[1024];
+static short buffer[4096];
 
 // ECI callback
 static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
@@ -80,7 +80,7 @@ HRESULT CTTSEngObj::FinalConstruct()
     //Initialize ECI
     engine = eciNew();
     eciRegisterCallback(engine, callback, NULL);
-    eciSetOutputBuffer(engine, 1024, buffer);
+    eciSetOutputBuffer(engine, 4096, buffer);
 eciSetParam(engine, eciInputType, 1);
 speaking = false;
 
