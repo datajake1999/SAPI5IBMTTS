@@ -192,7 +192,6 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
-                eciStop(engine);
                 return hr;
             }
             //--- Do skip?
@@ -219,16 +218,6 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
                     text2speak = (char *)malloc(strsize+1);
                     text2speak[strsize] = 0;
                     WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
-                    if (text2speak) eciAddText(engine, text2speak);
-                    break;
-                }
-
-                case SPVA_Silence:
-                {
-                    //Insert a pause
-                    if (text2speak) free(text2speak);
-                    text2speak = (char *)malloc(32);
-                    sprintf(text2speak, "`p%d", pTextFragList->State.SilenceMSecs);
                     if (text2speak) eciAddText(engine, text2speak);
                     break;
                 }
