@@ -32,6 +32,21 @@ NewRate = 0;
 return NewRate;
 }
 
+//convert SAPI pitch to ECI pitch
+static int SAPI2ECIPitch(int pitch, int BassPitch)
+{
+int NewPitch = BassPitch + (pitch * 2);
+if (NewPitch > 100)
+	{
+NewPitch = 100;
+}
+else if (NewPitch < 0)
+	{
+NewPitch = 0;
+}
+return NewPitch;
+}
+
 // Global pointer to OutputSite
 static ISpTTSEngineSite *gpOutputSite;
 
@@ -191,10 +206,15 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 gpOutputSite = pOutputSite;
 //set ECI voice parameters
 signed long rate;
+signed long pitch;
+signed long DefaultECIPitch;
 unsigned short volume;
 pOutputSite->GetRate(&rate);
+pitch = pTextFragList->State.PitchAdj.MiddleAdj;
+DefaultECIPitch = eciGetVoiceParam(engine, 1, eciPitchBaseline);
 pOutputSite->GetVolume(&volume);
 eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
+eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
 eciSetVoiceParam(engine, 0, eciVolume, volume);
 
         while(pTextFragList != NULL)
