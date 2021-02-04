@@ -20,7 +20,16 @@
 static int SAPI2ECIRate(int rate)
 {
 int DefaultRate = 60;
-return DefaultRate + (rate * 10);
+int NewRate = DefaultRate + (rate * 10);
+if (NewRate > 250)
+	{
+NewRate = 250;
+}
+else if (NewRate < 0)
+	{
+NewRate = 0;
+}
+return NewRate;
 }
 
 // Global pointer to OutputSite
