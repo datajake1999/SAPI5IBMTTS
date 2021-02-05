@@ -421,11 +421,12 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
     SPDBG_FUNC( "CTTSEngObj::GetVoiceFormat" );
     HRESULT hr = S_OK;
 
-    if (m_samplerate == 1)
+    unsigned long ECIRate = eciGetParam(engine, eciSampleRate);
+    if (ECIRate == 0)
     {
     hr = SpConvertStreamFormatEnum(SPSF_8kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
     }
-    else if (m_samplerate == 2)
+    else if (ECIRate == 2)
     {
     hr = SpConvertStreamFormatEnum(SPSF_22kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
     }
