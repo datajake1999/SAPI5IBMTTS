@@ -319,25 +319,25 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
     else
     {
 gpOutputSite = pOutputSite;
-//set ECI voice parameters
-signed long rate;
-signed long pitch;
-signed long DefaultECIPitch;
-unsigned short volume;
-pOutputSite->GetRate(&rate);
-pitch = pTextFragList->State.PitchAdj.MiddleAdj;
-DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
-pOutputSite->GetVolume(&volume);
-eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
-eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
-eciSetVoiceParam(engine, 0, eciVolume, volume);
-
         while(pTextFragList != NULL)
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
                 return hr;
             }
+
+            //set ECI voice parameters
+            signed long rate;
+            signed long pitch;
+            unsigned short volume;
+            pOutputSite->GetRate(&rate);
+            pitch = pTextFragList->State.PitchAdj.MiddleAdj;
+            pOutputSite->GetVolume(&volume);
+            eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
+            signed long DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
+            eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
+            eciSetVoiceParam(engine, 0, eciVolume, volume);
+
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
             {
@@ -351,6 +351,7 @@ eciSetVoiceParam(engine, 0, eciVolume, volume);
                     hr = pOutputSite->CompleteSkip( 0 );
                 }
             }
+
             switch(pTextFragList->State.eAction)
             {
 
