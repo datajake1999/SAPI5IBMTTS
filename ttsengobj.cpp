@@ -114,10 +114,6 @@ void CTTSEngObj::FinalRelease()
 {
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
-    //Shutdown ECI
-    engine = eciDelete(engine);
-    engine = NULL;
-
 } /* CTTSEngObj::FinalRelease */
 
 //
