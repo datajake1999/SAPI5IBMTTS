@@ -135,6 +135,8 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 
     if( SUCCEEDED( hr ) )
     {
+        //Shutdown ECI if it is already initialized
+        if (engine) eciDelete(engine);
         //Initialize ECI
         engine = eciNew();
         eciRegisterCallback(engine, callback, NULL);
