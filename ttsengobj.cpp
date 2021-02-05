@@ -143,6 +143,7 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         engine = eciNew();
         eciRegisterCallback(engine, callback, NULL);
         eciSetOutputBuffer(engine, 4096, buffer);
+        eciSetParam(engine, eciSynthMode, 1);
         eciSetParam(engine, eciInputType, 1);
         speaking = false;
 
