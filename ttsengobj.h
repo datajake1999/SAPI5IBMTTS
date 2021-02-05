@@ -79,6 +79,29 @@ class ATL_NO_VTABLE CTTSEngObj :
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
+    CComPtr<ISpTTSEngineSite> m_OutputSite;
+
+    //Convert SAPI parameters to ECI parameters
+    int SAPI2ECIRate(int rate);
+    int SAPI2ECIPitch(int pitch, int BassPitch);
+
+    //Handle to ECI
+    ECIHand engine;
+
+    //check if we are speaking or not
+    bool speaking;
+
+    //Input buffer
+    char *text2speak;
+
+    //Output buffer
+    short buffer[4096];
+
+    // ECI callback
+    static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData);
+
+    //ECI synthesis loop
+    void SynthLoop();
 
     //ECI settings
     unsigned long m_lang;

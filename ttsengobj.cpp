@@ -17,7 +17,7 @@
 //--- Local
 
 //convert SAPI rate to ECI rate
-static int SAPI2ECIRate(int rate)
+int CTTSEngObj::SAPI2ECIRate(int rate)
 {
 int DefaultRate = 60;
 int NewRate = DefaultRate + (rate * 10);
@@ -33,7 +33,7 @@ return NewRate;
 }
 
 //convert SAPI pitch to ECI pitch
-static int SAPI2ECIPitch(int pitch, int BassPitch)
+int CTTSEngObj::SAPI2ECIPitch(int pitch, int BassPitch)
 {
 int NewPitch = BassPitch + (pitch * 2);
 if (NewPitch > 100)
@@ -47,41 +47,27 @@ NewPitch = 0;
 return NewPitch;
 }
 
-// Global pointer to OutputSite
-static ISpTTSEngineSite *gpOutputSite;
-
-//Handle to ECI
-static ECIHand engine;
-
-//check if we are speaking or not
-static bool speaking;
-
-//Input buffer
-static char *text2speak;
-
-//Output buffer
-static short buffer[4096];
-
 // ECI callback
-static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
+ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
-if (!speaking)
+CTTSEngObj *SAPI = (CTTSEngObj*)pData;
+if (!SAPI->speaking)
 {
 return eciDataNotProcessed;
 }
-if (gpOutputSite->GetActions() & SPVES_ABORT)
+if (SAPI->m_OutputSite->GetActions() & SPVES_ABORT)
 {
 return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
-gpOutputSite->Write(buffer, lParam*2, NULL);
+SAPI->m_OutputSite->Write(SAPI->buffer, lParam*2, NULL);
 }
 return eciDataProcessed;
 }
 
 // ECI synthesis loop
-static void SynthLoop()
+void CTTSEngObj::SynthLoop()
 {
 int SpeakState = eciSpeaking(engine);
 while (speaking == true)
@@ -139,7 +125,7 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         if (engine) eciDelete(engine);
         //Initialize ECI
         engine = eciNew();
-        eciRegisterCallback(engine, callback, NULL);
+        eciRegisterCallback(engine, callback, this);
         eciSetOutputBuffer(engine, 4096, buffer);
         eciSetParam(engine, eciSynthMode, 1);
         eciSetParam(engine, eciInputType, 1);
@@ -317,7 +303,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
     }
     else
     {
-gpOutputSite = pOutputSite;
+m_OutputSite = pOutputSite;
         while(pTextFragList != NULL)
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
