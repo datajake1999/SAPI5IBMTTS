@@ -83,6 +83,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     //ECI settings
     unsigned long m_lang;
     unsigned long m_voice;
+    unsigned long m_samplerate;
 
 };
 

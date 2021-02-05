@@ -149,6 +149,7 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         //Load settings from the token
         m_cpToken->GetDWORD( L"Language", &m_lang);
         m_cpToken->GetDWORD( L"Voice", &m_voice);
+        m_cpToken->GetDWORD( L"SampleRate", &m_samplerate);
 
         //Set ECI language
         //Their is Probably a much more efficient way of doing this
@@ -240,6 +241,20 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 
         //Copy voice parameters to active voice
         eciCopyVoice(engine, m_voice, 0);
+
+        //Set the sample rate
+        if (m_samplerate == 1)
+        {
+            eciSetParam(engine, eciSampleRate, 0);
+        }
+        else if (m_samplerate == 2)
+        {
+            eciSetParam(engine, eciSampleRate, 2);
+        }
+        else
+        {
+            eciSetParam(engine, eciSampleRate, 1);
+        }
 
     }
 
@@ -406,7 +421,18 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
     SPDBG_FUNC( "CTTSEngObj::GetVoiceFormat" );
     HRESULT hr = S_OK;
 
+    if (m_samplerate == 1)
+    {
+    hr = SpConvertStreamFormatEnum(SPSF_8kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
+    }
+    else if (m_samplerate == 2)
+    {
+    hr = SpConvertStreamFormatEnum(SPSF_22kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
+    }
+    else
+    {
     hr = SpConvertStreamFormatEnum(SPSF_11kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
+    }
 
     return hr;
 } /* CTTSEngObj::GetVoiceFormat */
