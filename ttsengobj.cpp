@@ -131,6 +131,11 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
         eciSetParam(engine, eciInputType, 1);
         speaking = false;
 
+        //Set default settings
+        m_lang = 0;
+        m_voice = 1;
+        m_samplerate = 0;
+
         //Load settings from the token
         m_cpToken->GetDWORD( L"Language", &m_lang);
         m_cpToken->GetDWORD( L"Voice", &m_voice);
