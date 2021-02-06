@@ -62,6 +62,28 @@ return eciDataAbort;
 if (Msg == eciWaveformBuffer && lParam > 0)
 {
 SAPI->m_OutputSite->Write(SAPI->buffer, lParam*2, NULL);
+SAPI->m_AudioOffset += lParam*2;
+}
+if (Msg == eciIndexReply && lParam < 0x7fffffff && SAPI->m_pCurrFrag != NULL)
+{
+                CSpEvent Event;
+                Event.eEventId             = SPEI_WORD_BOUNDARY;
+                Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
+                Event.ullAudioStreamOffset = SAPI->m_AudioOffset;
+                Event.lParam               = SAPI->m_pCurrFrag->ulTextSrcOffset;
+                Event.wParam               = SAPI->m_pCurrFrag->ulTextLen;
+                SAPI->m_OutputSite->AddEvents( &Event, 1 );
+                SAPI->m_pCurrFrag = SAPI->m_pCurrFrag->pNext;
+}
+if (Msg == eciIndexReply && lParam == 0x7fffffff)
+{
+                CSpEvent Event;
+                Event.eEventId             = SPEI_SENTENCE_BOUNDARY;
+                Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
+                Event.ullAudioStreamOffset = 0;
+                Event.lParam               = 0;
+                Event.wParam               = SAPI->m_TotalLen;
+                SAPI->m_OutputSite->AddEvents( &Event, 1 );
 }
 return eciDataProcessed;
 }
@@ -308,7 +330,10 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
     }
     else
     {
-m_OutputSite = pOutputSite;
+        m_OutputSite = pOutputSite;
+        m_pCurrFrag   = pTextFragList;
+        m_IndexNum = 1;
+        m_TotalLen = 0;
         while(pTextFragList != NULL)
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
@@ -357,6 +382,11 @@ m_OutputSite = pOutputSite;
                     text2speak[strsize] = 0;
                     WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
                     if (text2speak) eciAddText(engine, text2speak);
+                    //Insert an index
+                    eciInsertIndex(engine, m_IndexNum);
+                    //Increment index number and total length
+                    m_IndexNum++;
+                    m_TotalLen += pTextFragList->ulTextLen;
                     break;
                 }
 
@@ -382,6 +412,9 @@ m_OutputSite = pOutputSite;
             }
             pTextFragList = pTextFragList->pNext;
         }
+
+        //Mark the end of the text
+        eciInsertIndex(engine, 0x7fffffff);
 
 //Synthesize text
         if (eciSynthesize(engine)) speaking = true;
