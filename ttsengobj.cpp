@@ -345,13 +345,17 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             //set ECI voice parameters
             signed long rate;
             signed long pitch;
+            signed long range;
             unsigned short volume;
             pOutputSite->GetRate(&rate);
             pitch = pTextFragList->State.PitchAdj.MiddleAdj;
+            range = pTextFragList->State.PitchAdj.RangeAdj;
             pOutputSite->GetVolume(&volume);
             eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
             signed long DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
             eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
+            signed long DefaultECIRange = eciGetVoiceParam(engine, m_voice, eciPitchFluctuation);
+            eciSetVoiceParam(engine, 0, eciPitchFluctuation, SAPI2ECIPitch(range, DefaultECIRange));
             eciSetVoiceParam(engine, 0, eciVolume, volume);
 
             //--- Do skip?
