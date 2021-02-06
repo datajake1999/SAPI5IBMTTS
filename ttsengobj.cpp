@@ -391,6 +391,15 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                     break;
                 }
 
+                case SPVA_Silence:
+                {
+                    //Insert a pause
+                    char silence[32];
+                    sprintf(silence, "`p%d", pTextFragList->State.SilenceMSecs);
+                    eciAddText(engine, silence);
+                    break;
+                }
+
           //--- Fire a bookmark event ---------------------------------
           case SPVA_Bookmark:
           {
