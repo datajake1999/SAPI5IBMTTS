@@ -338,7 +338,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
-                eciStop(engine);
+                if (eciStop(engine)) speaking = false;
                 return hr;
             }
 
