@@ -391,14 +391,8 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             //set ECI voice parameters
             signed long rate = 0;
             unsigned short volume = 100;
-            if( pOutputSite->GetActions() & SPVES_RATE )
-            {
-                pOutputSite->GetRate(&rate);
-            }
-            if( pOutputSite->GetActions() & SPVES_VOLUME )
-            {
-                pOutputSite->GetVolume(&volume);
-            }
+            pOutputSite->GetRate(&rate);
+            pOutputSite->GetVolume(&volume);
             rate += pTextFragList->State.RateAdj;
             volume = (volume * (unsigned short)pTextFragList->State.Volume) / 100;
             signed long pitch = pTextFragList->State.PitchAdj.MiddleAdj;
