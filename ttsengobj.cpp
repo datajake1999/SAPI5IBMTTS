@@ -393,8 +393,8 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             }
 
             //set ECI voice parameters
-            signed long rate;
-            unsigned short volume;
+            signed long rate = 0;
+            unsigned short volume = 100;
             if( pOutputSite->GetActions() & SPVES_RATE )
             {
                 pOutputSite->GetRate(&rate);
