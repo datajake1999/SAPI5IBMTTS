@@ -357,6 +357,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_pCurrFrag   = pTextFragList;
         m_IndexNum = 1;
         m_TotalLen = 0;
+
         while(pTextFragList != NULL)
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
@@ -367,19 +368,27 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
             //set ECI voice parameters
             signed long rate;
-            signed long pitch;
-            signed long range;
             unsigned short volume;
-            pOutputSite->GetRate(&rate);
-            pitch = pTextFragList->State.PitchAdj.MiddleAdj;
-            range = pTextFragList->State.PitchAdj.RangeAdj;
-            pOutputSite->GetVolume(&volume);
-            eciSetVoiceParam(engine, 0, eciSpeed, SAPI2ECIRate(rate));
+            if( pOutputSite->GetActions() & SPVES_RATE )
+            {
+                pOutputSite->GetRate(&rate);
+            }
+            if( pOutputSite->GetActions() & SPVES_VOLUME )
+            {
+                pOutputSite->GetVolume(&volume);
+            }
+            rate += pTextFragList->State.RateAdj;
+            volume = (volume * (unsigned short)pTextFragList->State.Volume) / 100;
+            signed long pitch = pTextFragList->State.PitchAdj.MiddleAdj;
+            signed long range = pTextFragList->State.PitchAdj.RangeAdj;
+            signed long NewECIRate = SAPI2ECIRate(rate);
             signed long DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
-            eciSetVoiceParam(engine, 0, eciPitchBaseline, SAPI2ECIPitch(pitch, DefaultECIPitch));
+            signed long NewECIPitch = SAPI2ECIPitch(pitch, DefaultECIPitch);
             signed long DefaultECIRange = eciGetVoiceParam(engine, m_voice, eciPitchFluctuation);
-            eciSetVoiceParam(engine, 0, eciPitchFluctuation, SAPI2ECIPitch(range, DefaultECIRange));
-            eciSetVoiceParam(engine, 0, eciVolume, volume);
+            signed long NewECIRange = SAPI2ECIPitch(range, DefaultECIRange);
+            char params[32];
+            sprintf(params, "`vs%d `vb%d `vf%d `vv%d", NewECIRate, NewECIPitch, NewECIRange, volume);
+            eciAddText(engine, params);
 
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
