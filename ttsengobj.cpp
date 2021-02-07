@@ -133,6 +133,7 @@ void CTTSEngObj::FinalRelease()
     //Shutdown ECI
     speaking = false;
     eciDelete(engine);
+    engine = NULL;
 
 } /* CTTSEngObj::FinalRelease */
 
