@@ -109,6 +109,14 @@ HRESULT CTTSEngObj::FinalConstruct()
     SPDBG_FUNC( "CTTSEngObj::FinalConstruct" );
     HRESULT hr = S_OK;
 
+    //Initialize ECI
+    engine = eciNew();
+    eciRegisterCallback(engine, callback, this);
+    eciSetOutputBuffer(engine, 4096, buffer);
+    eciSetParam(engine, eciSynthMode, 1);
+    eciSetParam(engine, eciInputType, 1);
+    speaking = false;
+
     return hr;
 } /* CTTSEngObj::FinalConstruct */
 
@@ -121,6 +129,10 @@ HRESULT CTTSEngObj::FinalConstruct()
 void CTTSEngObj::FinalRelease()
 {
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
+
+    //Shutdown ECI
+    speaking = false;
+    eciDelete(engine);
 
 } /* CTTSEngObj::FinalRelease */
 
@@ -143,16 +155,6 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 
     if( SUCCEEDED( hr ) )
     {
-        //Shutdown ECI if it is already initialized
-        if (engine) eciDelete(engine);
-        //Initialize ECI
-        engine = eciNew();
-        eciRegisterCallback(engine, callback, this);
-        eciSetOutputBuffer(engine, 4096, buffer);
-        eciSetParam(engine, eciSynthMode, 1);
-        eciSetParam(engine, eciInputType, 1);
-        speaking = false;
-
         //Set default settings
         m_lang = 0;
         m_voice = 1;
