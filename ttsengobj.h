@@ -79,7 +79,7 @@ class ATL_NO_VTABLE CTTSEngObj :
   /*=== Member Data ===*/
   private:
     CComPtr<ISpObjectToken> m_cpToken;
-    CComPtr<ISpTTSEngineSite> m_OutputSite;
+    ISpTTSEngineSite *m_OutputSite;
 
     //Convert SAPI parameters to ECI parameters
     int SAPI2ECIRate(int rate);
