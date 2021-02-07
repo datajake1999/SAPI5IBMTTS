@@ -124,7 +124,6 @@ if (eciStop(engine)) speaking = false;
 *****************************************************************************/
 HRESULT CTTSEngObj::FinalConstruct()
 {
-    SPDBG_FUNC( "CTTSEngObj::FinalConstruct" );
     HRESULT hr = S_OK;
 
 //Set pointers to NULL
@@ -156,7 +155,6 @@ HRESULT CTTSEngObj::FinalConstruct()
 *****************************************************************************/
 void CTTSEngObj::FinalRelease()
 {
-    SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
     if (engine == NULL)
     {
@@ -189,7 +187,6 @@ void CTTSEngObj::FinalRelease()
 *****************************************************************************/
 STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
-    SPDBG_FUNC( "CTTSEngObj::SetObjectToken" );
     HRESULT hr = SpGenericSetObjectToken(pToken, m_cpToken);
 
     if( SUCCEEDED( hr ) )
@@ -364,7 +361,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-    SPDBG_FUNC( "CTTSEngObj::Speak" );
     HRESULT hr = S_OK;
 
     //--- Check args
@@ -529,7 +525,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WAVEFORMATEX * pTargetWaveFormatEx,
                                           GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx )
 {
-    SPDBG_FUNC( "CTTSEngObj::GetVoiceFormat" );
     HRESULT hr = S_OK;
 
     if (engine == NULL)
