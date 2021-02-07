@@ -47,6 +47,21 @@ NewPitch = 0;
 return NewPitch;
 }
 
+//convert SAPI range to ECI range
+int CTTSEngObj::SAPI2ECIRange(int range, int BassRange)
+{
+int NewRange = BassRange + (range * 4);
+if (NewRange > 100)
+	{
+NewRange = 100;
+}
+else if (NewRange < 0)
+	{
+NewRange = 0;
+}
+return NewRange;
+}
+
 // ECI callback
 ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
@@ -396,7 +411,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             signed long DefaultECIPitch = eciGetVoiceParam(engine, m_voice, eciPitchBaseline);
             signed long NewECIPitch = SAPI2ECIPitch(pitch, DefaultECIPitch);
             signed long DefaultECIRange = eciGetVoiceParam(engine, m_voice, eciPitchFluctuation);
-            signed long NewECIRange = SAPI2ECIPitch(range, DefaultECIRange);
+            signed long NewECIRange = SAPI2ECIRange(range, DefaultECIRange);
             char params[32];
             sprintf(params, "`vs%d `vb%d `vf%d `vv%d", NewECIRate, NewECIPitch, NewECIRange, volume);
             eciAddText(engine, params);

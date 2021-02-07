@@ -84,6 +84,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     //Convert SAPI parameters to ECI parameters
     int SAPI2ECIRate(int rate);
     int SAPI2ECIPitch(int pitch, int BassPitch);
+    int SAPI2ECIRange(int range, int BassRange);
 
     //Handle to ECI
     ECIHand engine;
