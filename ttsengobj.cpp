@@ -409,9 +409,24 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
                 case SPVA_SpellOut:
                 {
+                    eciAddText(engine, "`ts2");
+                    //Convert Unicode text to ANSI for ECI
+                    int strsize = WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, NULL, 0, NULL, NULL);
+                    if (text2speak) free(text2speak);
+                    text2speak = (char *)malloc(strsize+1);
+                    text2speak[strsize] = 0;
+                    WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
+                    if (text2speak) eciAddText(engine, text2speak);
+                    //Insert an index
+                    eciInsertIndex(engine, m_IndexNum);
+                    //Increment index number and total length
+                    m_IndexNum++;
+                    m_TotalLen += pTextFragList->ulTextLen;
+                    break;
                 }
                 case SPVA_Speak:
                 {
+                    eciAddText(engine, "`ts0");
                     //Convert Unicode text to ANSI for ECI
                     int strsize = WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, NULL, 0, NULL, NULL);
                     if (text2speak) free(text2speak);
