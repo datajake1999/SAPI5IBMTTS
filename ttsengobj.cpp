@@ -110,7 +110,12 @@ HRESULT CTTSEngObj::FinalConstruct()
     HRESULT hr = S_OK;
 
     //Initialize ECI
+    engine = NULL;
     engine = eciNew();
+    if (engine == NULL)
+    {
+        return hr;
+    }
     eciRegisterCallback(engine, callback, this);
     eciSetOutputBuffer(engine, 4096, buffer);
     eciSetParam(engine, eciSynthMode, 1);
@@ -131,6 +136,10 @@ void CTTSEngObj::FinalRelease()
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
     //Shutdown ECI
+    if (engine == NULL)
+    {
+        return;
+    }
     speaking = false;
     eciDelete(engine);
     engine = NULL;
@@ -156,6 +165,10 @@ STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 
     if( SUCCEEDED( hr ) )
     {
+        if (engine == NULL)
+        {
+            return hr;
+        }
         //Set default settings
         m_lang = 0;
         m_voice = 1;
@@ -333,6 +346,10 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
     }
     else
     {
+        if (engine == NULL)
+        {
+            return hr;
+        }
         m_OutputSite = pOutputSite;
         m_pCurrFrag   = pTextFragList;
         m_IndexNum = 1;
@@ -462,6 +479,10 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
     SPDBG_FUNC( "CTTSEngObj::GetVoiceFormat" );
     HRESULT hr = S_OK;
 
+    if (engine == NULL)
+    {
+        return hr;
+    }
     unsigned long ECIRate = eciGetParam(engine, eciSampleRate);
     if (ECIRate == 0)
     {
