@@ -94,7 +94,10 @@ void CTTSEngObj::SynthLoop()
 int SpeakState = eciSpeaking(engine);
 while (speaking == true)
 {
-if (eciSpeaking(engine) == SpeakState-1) speaking = false;
+if (eciSpeaking(engine) != SpeakState)
+{
+if (eciStop(engine)) speaking = false;
+}
 }
 }
 
