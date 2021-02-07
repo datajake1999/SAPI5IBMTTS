@@ -18,3 +18,8 @@ This is an attempt to allow ETI-Eloquence and IBM ViaVoice speech synthesizers t
 
 ## Installation
 
+After building, you will be able to install. It is necessary to do this in two stages, as outlined below.
+
+## Stage 1: Obtain IBM ViaVoice/ETI-Eloquence Files
+
+The first step in setting this up is to get access to the ETI-Eloquence or IBM ViaVoice language files themselves. Once these files are obtained, you should copy the file IBMECI.dll into the same folder where the current dll resides.
