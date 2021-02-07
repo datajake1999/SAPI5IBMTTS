@@ -112,8 +112,13 @@ HRESULT CTTSEngObj::FinalConstruct()
     SPDBG_FUNC( "CTTSEngObj::FinalConstruct" );
     HRESULT hr = S_OK;
 
-    //Initialize ECI
+//Set pointers to NULL
+    m_OutputSite = NULL;
     engine = NULL;
+    text2speak = NULL;
+    memset(buffer, 0, sizeof(buffer));
+
+    //Initialize ECI
     engine = eciNew();
     if (engine == NULL)
     {
@@ -138,14 +143,20 @@ void CTTSEngObj::FinalRelease()
 {
     SPDBG_FUNC( "CTTSEngObj::FinalRelease" );
 
-    //Shutdown ECI
     if (engine == NULL)
     {
         return;
     }
+
+    //Shutdown ECI
     speaking = false;
     eciDelete(engine);
+
+//Set pointers to NULL
+    m_OutputSite = NULL;
     engine = NULL;
+    text2speak = NULL;
+    memset(buffer, 0, sizeof(buffer));
 
 } /* CTTSEngObj::FinalRelease */
 
