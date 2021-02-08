@@ -66,9 +66,9 @@ return NewRange;
 ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData)
 {
 CTTSEngObj *SAPI = (CTTSEngObj*)pData;
-if (!SAPI->speaking)
+if (SAPI->m_OutputSite == NULL)
 {
-return eciDataNotProcessed;
+return eciDataAbort;
 }
 if (SAPI->m_OutputSite->GetActions() & SPVES_ABORT)
 {
@@ -106,16 +106,8 @@ return eciDataProcessed;
 // ECI synthesis loop
 void CTTSEngObj::SynthLoop()
 {
-while (speaking == true)
+while (eciSpeaking(engine) & 1)
 {
-if (eciSpeaking(engine) & 1)
-{
-continue;
-}
-else
-{
-if (eciStop(engine)) speaking = false;
-}
 }
 }
 
@@ -145,7 +137,6 @@ HRESULT CTTSEngObj::FinalConstruct()
     eciSetOutputBuffer(engine, 4096, buffer);
     eciSetParam(engine, eciSynthMode, 1);
     eciSetParam(engine, eciInputType, 1);
-    speaking = false;
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
@@ -165,7 +156,6 @@ void CTTSEngObj::FinalRelease()
     }
 
     //Shutdown ECI
-    speaking = false;
     eciDelete(engine);
 
 //Set pointers to NULL
@@ -387,7 +377,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
-                if (eciStop(engine)) speaking = false;
+                eciStop(engine);
                 return hr;
             }
 
@@ -497,9 +487,10 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         eciInsertIndex(engine, 0x7fffffff);
 
 //Synthesize text
-        if (eciSynthesize(engine)) speaking = true;
+        eciSynthesize(engine);
 //wait for synthesis to complete
         SynthLoop();
+        m_OutputSite = NULL;
 
         //--- S_FALSE just says that we hit the end, return okay
         if( hr == S_FALSE )
