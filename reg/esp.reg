@@ -1,0 +1,13 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\IBMTTSEsp]
+@="Castilian Spanish IBM TTS"
+"409"="Castilian Spanish IBM TTS"
+"CLSID"="{301EDFC4-D65B-4823-A598-450EE4656837}"
+"Language"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\IBMTTSEsp\Attributes]
+"Gender"="Male"
+"Language"="409;9"
+"Age"="Adult"
+"Name"="Castilian Spanish IBM TTS"
