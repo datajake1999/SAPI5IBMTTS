@@ -370,6 +370,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         }
         m_OutputSite = pOutputSite;
         m_pCurrFrag   = pTextFragList;
+        m_AudioOffset = 0;
         m_IndexNum = 1;
         m_TotalLen = 0;
 
