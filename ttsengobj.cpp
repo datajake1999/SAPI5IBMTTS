@@ -106,10 +106,13 @@ return eciDataProcessed;
 // ECI synthesis loop
 void CTTSEngObj::SynthLoop()
 {
-int SpeakState = eciSpeaking(engine);
 while (speaking == true)
 {
-if (eciSpeaking(engine) != SpeakState)
+if (eciSpeaking(engine) & 1)
+{
+continue;
+}
+else
 {
 if (eciStop(engine)) speaking = false;
 }
