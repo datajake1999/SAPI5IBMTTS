@@ -23,3 +23,8 @@ After building, you will be able to install. It is necessary to do this in two s
 ## Stage 1: Obtain IBM ViaVoice/ETI-Eloquence Files
 
 The first step in setting this up is to get access to the ETI-Eloquence or IBM ViaVoice language files themselves. Once these files are obtained, you should copy the file IBMECI.dll into the same folder where the current dll resides.
+
+## Known issues
+
+* In some cases, the engine will cut off the ends of speech fragments. A fully stable solution hasn’t been found yet.
+
