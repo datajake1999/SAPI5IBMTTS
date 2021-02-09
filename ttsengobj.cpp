@@ -68,7 +68,7 @@ ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, lon
 CTTSEngObj *SAPI = (CTTSEngObj*)pData;
 if (SAPI->m_OutputSite == NULL)
 {
-return eciDataNotProcessed;
+return eciDataAbort;
 }
 if (SAPI->m_OutputSite->GetActions() & SPVES_ABORT)
 {
