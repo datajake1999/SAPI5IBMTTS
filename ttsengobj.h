@@ -89,9 +89,6 @@ class ATL_NO_VTABLE CTTSEngObj :
     //Handle to ECI
     ECIHand engine;
 
-    //Check if ECI is speaking
-    bool speaking;
-
     //Input buffer
     char *text2speak;
 
