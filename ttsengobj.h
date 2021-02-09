@@ -98,9 +98,6 @@ class ATL_NO_VTABLE CTTSEngObj :
     // ECI callback
     static ECICallbackReturn callback(ECIHand hEngine, enum ECIMessage Msg, long lParam, void *pData);
 
-    //ECI synthesis loop
-    void SynthLoop();
-
     //ECI settings
     unsigned long m_lang;
     unsigned long m_voice;

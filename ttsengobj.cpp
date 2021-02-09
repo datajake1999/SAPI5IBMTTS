@@ -103,14 +103,6 @@ if (Msg == eciIndexReply && lParam == 0x7fffffff)
 return eciDataProcessed;
 }
 
-// ECI synthesis loop
-void CTTSEngObj::SynthLoop()
-{
-while (eciSpeaking(engine) & 1)
-{
-}
-}
-
 /*****************************************************************************
 * CTTSEngObj::FinalConstruct *
 *----------------------------*
@@ -489,8 +481,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
 //Synthesize text
         eciSynthesize(engine);
+
 //wait for synthesis to complete
-        SynthLoop();
+        while (eciSpeaking(engine) & 1)
+        {
+        }
+
+        //Set m_OutputSite to NULL so the callback doesn't do anything outside the loop
         m_OutputSite = NULL;
 
         //--- S_FALSE just says that we hit the end, return okay
