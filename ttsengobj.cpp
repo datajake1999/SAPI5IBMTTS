@@ -68,10 +68,12 @@ ECICallbackReturn CTTSEngObj::callback(ECIHand hEngine, enum ECIMessage Msg, lon
 CTTSEngObj *SAPI = (CTTSEngObj*)pData;
 if (SAPI->m_OutputSite == NULL)
 {
+SAPI->speaking = false;
 return eciDataAbort;
 }
 if (SAPI->m_OutputSite->GetActions() & SPVES_ABORT)
 {
+SAPI->speaking = false;
 return eciDataAbort;
 }
 if (Msg == eciWaveformBuffer && lParam > 0)
@@ -99,6 +101,7 @@ if (Msg == eciIndexReply && lParam == 0x7fffffff)
                 Event.lParam               = 0;
                 Event.wParam               = SAPI->m_TotalLen;
                 SAPI->m_OutputSite->AddEvents( &Event, 1 );
+SAPI->speaking = false;
 }
 return eciDataProcessed;
 }
@@ -106,8 +109,9 @@ return eciDataProcessed;
 // ECI synthesis loop
 void CTTSEngObj::SynthLoop()
 {
-while (eciSpeaking(engine) & 1)
+while (speaking)
 {
+eciSpeaking(engine);
 }
 }
 
@@ -137,6 +141,7 @@ HRESULT CTTSEngObj::FinalConstruct()
     eciSetOutputBuffer(engine, 4096, buffer);
     eciSetParam(engine, eciSynthMode, 1);
     eciSetParam(engine, eciInputType, 1);
+    speaking = false;
 
     return hr;
 } /* CTTSEngObj::FinalConstruct */
@@ -155,6 +160,7 @@ void CTTSEngObj::FinalRelease()
         return;
     }
 
+    speaking = false;
     //Shutdown ECI
     eciDelete(engine);
 
@@ -378,7 +384,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         {
             if( pOutputSite->GetActions() & SPVES_ABORT )
             {
-                eciStop(engine);
+                if (eciStop(engine)) speaking = false;
                 return hr;
             }
 
@@ -488,7 +494,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         eciInsertIndex(engine, 0x7fffffff);
 
 //Synthesize text
-        eciSynthesize(engine);
+        if (eciSynthesize(engine)) speaking = true;
 //wait for synthesis to complete
         SynthLoop();
         m_OutputSite = NULL;
