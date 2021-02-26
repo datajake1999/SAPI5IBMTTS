@@ -24,7 +24,18 @@ After building, you will be able to install. It is necessary to do this in two s
 
 The first step in setting this up is to get access to the ETI-Eloquence or IBM ViaVoice language files themselves. Once these files are obtained, you should copy the file IBMECI.dll into the same folder where the current dll resides.
 
+## Stage 2
+Once you have access to the Eloquence files and have copied the file ibmeci.dll into the same location as TTSEng.dll, perform the following steps:
+
+1. Open Command Prompt as administrator. This is necessary in order to set up new SAPI voices.
+2. Change directories (cd) to where the Eloquence/ViaVoice files are located.
+3. Type install, and press enter.
+
+At this point, you should be able to use Eloquence/IBM ViaVoice with whichever languages you have.
+
 ## Known issues
 
-* In some cases, the engine will cut off the ends of speech fragments. A fully stable solution hasn’t been found yet.
-
+* In some cases, the engine will cut off text. A fully stable solution hasn’t been found yet.
+	* This is most noticeable with the say all command in some screen readers.
+* If you attempt to use this with anything other than ETI-Eloquence, it is very likely that you will notice more crashes than if you use it with Eloquence 6.1.
+	* This seems to be partially due to issues with ViaVoice and other versions of Eloquence receiving text very rapidly.
