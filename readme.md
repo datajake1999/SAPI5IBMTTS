@@ -30,6 +30,7 @@ Once you have access to the Eloquence files and have copied the file ibmeci.dll 
 1. Open Command Prompt as administrator. This is necessary in order to set up new SAPI voices.
 2. Change directories (cd) to where the Eloquence/ViaVoice files are located.
 3. Type install, and press enter.
+	* Note that if you wish to use this with ETI-Eloquence, the file is called ECI.dll. However, once copied, it should be renamed to IBMECI.dll so that it will be loaded properly.
 
 At this point, you should be able to use Eloquence/IBM ViaVoice with whichever languages you have.
 
@@ -37,5 +38,5 @@ At this point, you should be able to use Eloquence/IBM ViaVoice with whichever l
 
 * In some cases, the engine will cut off text. A fully stable solution hasn’t been found yet.
 	* This is most noticeable with the say all command in some screen readers.
-* If you attempt to use this with anything other than ETI-Eloquence, it is very likely that you will notice more crashes than if you use it with Eloquence 6.1.
+* If you attempt to use this with anything other than ETI-Eloquence 6.1, it is very likely that you will notice more crashes than if you use it with Eloquence 6.1.
 	* This seems to be partially due to issues with ViaVoice and other versions of Eloquence receiving text very rapidly.
