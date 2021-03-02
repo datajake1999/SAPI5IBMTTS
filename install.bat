@@ -1,30 +1,61 @@
 regsvr32 /s ttseng.dll
+if exist %cd%\enu.syn goto enu else goto error
+if exist %cd%\eng.syn goto eng else goto error
+if exist %cd%\esp.syn goto esp else goto error
+if exist %cd%\esm.syn goto esm else goto error
+if exist %cd%\fra.syn goto fra else goto error
+if exist %cd%\frc.syn goto frc else goto error
+if exist %cd%\deu.syn goto deu else goto error
+if exist %cd%\ita.syn goto ita else goto error
+if exist %cd%\chs.syn goto chs else goto error
+if exist %cd%\ptb.syn goto ptb else goto error
+if exist %cd%\jpn.syn goto jpn else goto error
+if exist %cd%\fin.syn goto fin else goto error
+if exist %cd%\kor.syn goto kor else goto error
+:enu
 regsvr32 /s enu.syn
+reg import enu.reg /reg:32
+:eng
 regsvr32 /s eng.syn
+reg import eng.reg /reg:32
+:esp
 regsvr32 /s esp.syn
+reg import esp.reg /reg:32
+:esm
 regsvr32 /s esm.syn
+reg import esm.reg /reg:32
+:fra
 regsvr32 /s fra.syn
+reg import fra.reg /reg:32
+:frc
 regsvr32 /s frc.syn
+reg import frc.reg /reg:32
+:deu
 regsvr32 /s deu.syn
+reg import deu.reg /reg:32
+:ita
 regsvr32 /s ita.syn
+reg import ita.reg /reg:32
+:chs
 regsvr32 /s chs.syn
 regsvr32 /s chsrom.dll
+reg import chs.reg /reg:32
+:ptb
 regsvr32 /s ptb.syn
+reg import ptb.reg /reg:32
+:jpn
 regsvr32 /s jpn.syn
 regsvr32 /s jpnrom.dll
+reg import jpn.reg /reg:32
+:fin
 regsvr32 /s fin.syn
+reg import fin.reg /reg:32
+:kor
 regsvr32 /s kor.syn
 regsvr32 /s korrom.dll
-reg import enu.reg /reg:32
-reg import eng.reg /reg:32
-reg import esp.reg /reg:32
-reg import esm.reg /reg:32
-reg import fra.reg /reg:32
-reg import frc.reg /reg:32
-reg import deu.reg /reg:32
-reg import ita.reg /reg:32
-reg import chs.reg /reg:32
-reg import ptb.reg /reg:32
-reg import jpn.reg /reg:32
-reg import fin.reg /reg:32
 reg import kor.reg /reg:32
+:error
+echo A language file was not found. Skipping.
+:end
+echo Installation finished. Press enter to continue.
+pause > nul
