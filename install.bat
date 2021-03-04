@@ -68,8 +68,10 @@ set language=kor
 regsvr32 /s kor.syn
 regsvr32 /s korrom.dll
 reg import kor.reg /reg:32
+goto end
 :error
 echo %language% was not found. Skipping.
 :end
 echo Installation finished. Press enter to continue.
 pause > nul
+exit
