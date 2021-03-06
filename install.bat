@@ -24,15 +24,60 @@ goto esm
 else (
 goto error
 )
-if exist .\fra.syn ( goto fra ) else ( goto error )
-if exist .\frc.syn ( goto frc ) else ( goto error )
-if exist .\deu.syn ( goto deu ) else ( goto error )
-if exist .\ita.syn ( goto ita ) else ( goto error )
-if exist .\chs.syn ( goto chs ) else ( goto error
-if exist .\ptb.syn ( goto ptb ) else ( goto error )
-if exist .\jpn.syn ( goto jpn ) else ( goto error )
-if exist .\fin.syn ( goto fin ) else ( goto error )
-if exist .\kor.syn ( goto kor ) else ( goto error )
+if exist .\fra.syn (
+goto fra
+)
+else (
+goto error
+)
+if exist .\frc.syn (
+goto frc
+)
+else (
+goto error
+)
+if exist .\deu.syn (
+goto deu
+)
+else (
+goto error
+)
+if exist .\ita.syn (
+goto ita
+)
+else (
+goto error
+)
+if exist .\chs.syn (
+goto chs
+)
+else (
+goto error
+)
+if exist .\ptb.syn (
+goto ptb
+)
+else (
+goto error
+)
+if exist .\jpn.syn (
+goto jpn
+)
+else (
+goto error
+)
+if exist .\fin.syn (
+goto fin
+)
+else (
+goto error
+)
+if exist .\kor.syn (
+goto kor
+)
+else (
+goto error
+)
 :enu
 set language=enu
 regsvr32 /s enu.syn
