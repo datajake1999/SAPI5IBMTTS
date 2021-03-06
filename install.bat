@@ -1,18 +1,38 @@
 @echo off
 regsvr32 /s ttseng.dll
-if exist %cd%\enu.syn ( goto enu ) else ( goto error )
-if exist %cd%\eng.syn ( goto eng ) else ( goto error )
-if exist %cd%\esp.syn ( goto esp ) else ( goto error )
-if exist %cd%\esm.syn ( goto esm ) else ( goto error )
-if exist %cd%\fra.syn ( goto fra ) else ( goto error )
-if exist %cd%\frc.syn ( goto frc ) else ( goto error )
-if exist %cd%\deu.syn ( goto deu ) else ( goto error )
-if exist %cd%\ita.syn ( goto ita ) else ( goto error )
-if exist %cd%\chs.syn ( goto chs ) else ( goto error
-if exist %cd%\ptb.syn ( goto ptb ) else ( goto error )
-if exist %cd%\jpn.syn ( goto jpn ) else ( goto error )
-if exist %cd%\fin.syn ( goto fin ) else ( goto error )
-if exist %cd%\kor.syn ( goto kor ) else ( goto error )
+if exist .\enu.syn (
+goto enu
+)
+else (
+goto error
+)
+if exist .\eng.syn (
+goto eng
+)
+else (
+goto error
+)
+if exist .\esp.syn (
+goto esp
+)
+else (
+goto error
+)
+if exist .\esm.syn (
+goto esm
+)
+else (
+goto error
+)
+if exist .\fra.syn ( goto fra ) else ( goto error )
+if exist .\frc.syn ( goto frc ) else ( goto error )
+if exist .\deu.syn ( goto deu ) else ( goto error )
+if exist .\ita.syn ( goto ita ) else ( goto error )
+if exist .\chs.syn ( goto chs ) else ( goto error
+if exist .\ptb.syn ( goto ptb ) else ( goto error )
+if exist .\jpn.syn ( goto jpn ) else ( goto error )
+if exist .\fin.syn ( goto fin ) else ( goto error )
+if exist .\kor.syn ( goto kor ) else ( goto error )
 :enu
 set language=enu
 regsvr32 /s enu.syn
