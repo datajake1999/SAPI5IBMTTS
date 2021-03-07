@@ -18,7 +18,7 @@ This is an attempt to allow ETI-Eloquence and IBM ViaVoice speech synthesizers t
 
 ## Installation
 
-After building, you will be able to install. It is necessary to do this in two stages, as outlined below.
+It is necessary to do the installation in two stages, as outlined below.
 
 ## Stage 1: Obtain IBM ViaVoice/ETI-Eloquence Files
 
