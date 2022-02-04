@@ -402,7 +402,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                 {
                     //--- Notify SAPI how many items we skipped. We're returning zero
                     //    because this feature isn't implemented.
-                    hr = pOutputSite->CompleteSkip( 0 );
                 }
             }
 
@@ -420,7 +419,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                     WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
                     if (text2speak) eciAddText(engine, text2speak);
                     //Insert an index
-                    eciInsertIndex(engine, m_IndexNum);
                     //Increment index number and total length
                     m_IndexNum++;
                     m_TotalLen += pTextFragList->ulTextLen;
@@ -437,7 +435,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                     WideCharToMultiByte(CP_ACP, 0, pTextFragList->pTextStart, pTextFragList->ulTextLen, text2speak, strsize, NULL, NULL);
                     if (text2speak) eciAddText(engine, text2speak);
                     //Insert an index
-                    eciInsertIndex(engine, m_IndexNum);
                     //Increment index number and total length
                     m_IndexNum++;
                     m_TotalLen += pTextFragList->ulTextLen;
@@ -477,7 +474,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         }
 
         //Mark the end of the text
-        eciInsertIndex(engine, 0x7fffffff);
 
 //Synthesize text
         eciSynthesize(engine);
