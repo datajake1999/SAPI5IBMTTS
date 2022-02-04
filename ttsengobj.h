@@ -103,12 +103,6 @@ class ATL_NO_VTABLE CTTSEngObj :
     unsigned long m_voice;
     unsigned long m_samplerate;
 
-    //ECI indexing
-    const SPVTEXTFRAG*  m_pCurrFrag;
-    unsigned long m_AudioOffset;
-    unsigned long m_IndexNum;
-    unsigned long m_TotalLen;
-
 };
 
 #endif //--- This must be the last line in the file
