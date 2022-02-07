@@ -429,7 +429,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             SPEVENT Event;
             Event.eEventId             = SPEI_TTS_BOOKMARK;
             Event.elParamType          = SPET_LPARAM_IS_STRING;
-            Event.ullAudioStreamOffset = -100;
+            Event.ullAudioStreamOffset = 0;
             Event.lParam               = (LPARAM)pszBookmark;
             Event.wParam               = _wtol(pszBookmark);
             hr = pOutputSite->AddEvents( &Event, 1 );
