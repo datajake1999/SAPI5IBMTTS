@@ -449,6 +449,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         }
 
         //Set m_OutputSite to NULL so the callback doesn't do anything outside the loop
+Sleep(1);
         m_OutputSite = NULL;
 
         //--- S_FALSE just says that we hit the end, return okay
