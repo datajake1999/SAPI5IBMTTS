@@ -34,6 +34,15 @@ Once you have access to the Eloquence files and have copied the file ibmeci.dll 
 
 At this point, you should be able to use Eloquence/IBM ViaVoice with whichever languages you have.
 
+## Uninstalation
+Perform the following steps:
+
+1. Open Command Prompt as administrator. This is necessary in order to uninstall SAPI voices.
+2. Change directories (cd) to where the Eloquence/ViaVoice files are located.
+3. Type uninstall, and press enter.
+
+At this point, the voice should be uninstalled.
+
 ## Known issues
 
 * In some cases, the engine will cut off text. A fully stable solution hasn’t been found yet.
